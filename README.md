@@ -45,8 +45,11 @@ Welcome to my Album Collection project! This is a Single Page Application (SPA) 
 - MusicBrainz API
 - `localStorage` for managing user collections and favorites
 
-## Installation
+## Contributor's
 
+## License
+
+## Installation
 ### 1. Clone the Repository
 First, clone the repository to your local machine using Git:
 ```bash
