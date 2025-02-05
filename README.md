@@ -1,7 +1,7 @@
 # Album Collection
 
 ## Introduction
-Welcome to the Album Collection project! This is a Single Page Application (SPA) built with HTML, CSS, and JavaScript that allows users to search for albums, view detailed information about them, and save them to their personal collection. The project utilizes the MusicBrainz API to fetch data about albums and artists.
+Welcome to my Album Collection project! This is a Single Page Application (SPA) built with HTML, CSS, and JavaScript that allows users to search for albums, view detailed information about them, and save them to their personal collection. The project utilizes the MusicBrainz API to fetch data about albums and artists.
 
 ## Project Requirements
 - **Frontend**: HTML, CSS, and JavaScript
