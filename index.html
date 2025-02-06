@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Album Collection</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album Collection</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Album Collection</h1>
-    <input type="text" id="searchInput" placeholder="Search for an album...">
-    <button id="searchButton">Search</button>
-  </header>
-  <main id="mainContent">
-    <!-- Search results and album details will be displayed here -->
-  </main>
-  <script src="main.js"></script>
+    <header>
+        <h1>Album Collection</h1>
+        <input type="text" id="search-bar" placeholder="Search for albums by artist or title...">
+    </header>
+    <main>
+        <section id="search-results">
+            <!-- Search results will be displayed here -->
+        </section>
+        <section id="album-details">
+            <!-- Album details will be displayed here -->
+        </section>
+        <section id="personal-collection">
+            <h2>My Collection</h2>
+            <!-- User's personal collection will be displayed here -->
+        </section>
+        <section id="favorites-list">
+            <h2>Favorites</h2>
+            <!-- User's favorite albums will be displayed here -->
+        </section>
+    </main>
+    <script src="index.js"></script>
 </body>
 </html>
