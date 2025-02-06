@@ -4,17 +4,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const albumDetails = document.getElementById('album-details');
     const personalCollection = document.getElementById('personal-collection');
     const favoritesList = document.getElementById('favorites-list');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const errorMessage = document.getElementById('error-message');
 
     // Fetch albums from MusicBrainz API
     async function fetchAlbums(query) {
-        const response = await fetch(`https://musicbrainz.org/ws/2/release/?query=${query}&fmt=json`);
-        const data = await response.json();
-        displaySearchResults(data.releases);
+        try {
+            loadingIndicator.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            const response = await fetch(`https://musicbrainz.org/ws/2/release/?query=${query}&fmt=json`);
+            const data = await response.json();
+            displaySearchResults(data.releases);
+        } catch (error) {
+            errorMessage.classList.remove('hidden');
+        } finally {
+            loadingIndicator.classList.add('hidden');
+        }
     }
 
     // Display search results
     function displaySearchResults(albums) {
         searchResults.innerHTML = '';
+        if (albums.length === 0) {
+            searchResults.innerHTML = '<p>No results found.</p>';
+            return;
+        }
         albums.forEach(album => {
             const albumElement = document.createElement('div');
             albumElement.textContent = album.title;
