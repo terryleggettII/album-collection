@@ -3,21 +3,6 @@
 ## Getting Started
 Welcome to my Album Collection project! This is a Single Page Application (SPA) built with HTML, CSS, and JavaScript that allows users to search for albums, view detailed information about them, and save them to their personal collection. The project utilizes the MusicBrainz API to fetch data about albums and artists.
 
-## Table of Contents
-- **Requirements**
-- **Features**
-- **Technologies Used**
-- **Installation**
-
-## Requirements
-- **Frontend**: HTML, CSS, and JavaScript
-- **Backend**: MusicBrainz API (No API key required)
-- **Data**: Minimum of 5 objects with at least 3 attributes each
-- **Asynchronous Interactions**: Handled using `fetch` and JSON
-- **Single Page Application**: No redirects or reloads
-- **Event Listeners**: At least 3 distinct event listeners
-- **Array Iteration**: Implement at least one instance using array methods
-
 ## Features
 1. **Search for Albums**
    - Users can search for albums by artist name or album title.
@@ -45,13 +30,14 @@ Welcome to my Album Collection project! This is a Single Page Application (SPA) 
 - MusicBrainz API
 - `localStorage` for managing user collections and favorites
 
-## Contributor's
-
-## License
-
 ## Installation
 ### 1. Clone the Repository
 First, clone the repository to your local machine using Git:
 ```bash
 git clone https://github.com/terryleggettII/album-collection.git
 cd album-collection
+```
+
+## Contributors
+
+## License
