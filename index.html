@@ -12,6 +12,12 @@
         <input type="text" id="search-bar" placeholder="Search for albums by artist or title...">
     </header>
     <main>
+        <section id="loading-indicator" class="hidden">
+            <p>Loading...</p>
+        </section>
+        <section id="error-message" class="hidden">
+            <p>Error: Unable to fetch data. Please try again later.</p>
+        </section>
         <section id="search-results">
             <!-- Search results will be displayed here -->
         </section>
