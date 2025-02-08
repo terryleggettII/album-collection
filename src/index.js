@@ -212,7 +212,6 @@ function displaySearchResults(albums, query, searchType) {
                         <p>Artist: ${artistName}</p>
                         ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 300px; height: 300px;" />` : ''}
                     `;
-                    albumDiv.addEventListener('click', () => showAlbumDetails(album.id));
                     resultsContainer.appendChild(albumDiv);
                 });
             });
