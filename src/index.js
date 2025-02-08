@@ -210,7 +210,7 @@ function displaySearchResults(albums, query, searchType) {
                     albumDiv.innerHTML = `
                         <h3>${title}</h3>
                         <p>Artist: ${artistName}</p>
-                        ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 300px; height: 300px;" />` : ''}
+                        ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 300px; height: 300px;" />` : '<p>NO ALBUM ART FOUND</p>'}
                     `;
                     resultsContainer.appendChild(albumDiv);
                 });
