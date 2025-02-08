@@ -227,3 +227,4 @@ document.getElementById('search-form').addEventListener('submit', function (even
     const searchType = document.getElementById('search-type').value;
     fetchAlbums(query, searchType, displaySearchResults);
 });
+
