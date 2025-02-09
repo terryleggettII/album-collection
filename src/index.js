@@ -64,6 +64,28 @@ function getCoverArtURL(releaseGroupId) {
         });
 }
 
+function addAlbumToFavorites(album) {
+    fetch('http://localhost:3000/favoriteAlbums', {
+        method: postMessage,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(album)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Album added to favorites:', data)
+    })
+    .catch(error => {
+        console.error('Error adding album to favorites:', error)
+    });
+}
+
 // Function to fetch albums based on user query and search type
 function fetchAlbums(query, searchType, callback) {
     if (isLoading) return; // Prevent duplicate searches
