@@ -236,6 +236,9 @@ function displayFavorites(favorites) {
     })
 }
 
+// Call fetchFavorites to display the favorites list when the page loads
+document.addEventListener('DOMContentLoaded', fetchFavorites);
+
 // Function to display search results in the UI
 function displaySearchResults(albums, query, searchType) {
     const resultsContainer = document.getElementById('results');
