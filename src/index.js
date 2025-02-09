@@ -256,3 +256,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+// Add a Loading Spinner
+function showLoadingState() {
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = '<div class="loading-spinner"></div>';
+}
