@@ -28,7 +28,7 @@ Welcome to my Album Collection project! This is a Single Page Application (SPA) 
 - CSS
 - JavaScript
 - MusicBrainz API
-- `localStorage` for managing user's' favorites
+- `localStorage` for managing user's favorites
 
 ## Installation
 1. Clone the repository:
