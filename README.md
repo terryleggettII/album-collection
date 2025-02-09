@@ -15,12 +15,10 @@ Welcome to my Album Collection project! This is a Single Page Application (SPA) 
 ## Features
 1. **Search for Albums**
    - Users can search for albums by artist name or album title.
-   - The search results display a list of albums matching the query.
+   - The search results display a list of albums matching the query
+   - The search also displays the release date of the albums on the album card.
 
-2. **View Album Details**
-   - Users can click on an album to view detailed information, including track listings and release date.
-
-3. **Save to Personal Collection**
+2. **Save to Personal Collection**
    - Users can save albums to their personal collection.
    - The collection is managed locally using `localStorage`.
 
