@@ -169,9 +169,6 @@ function displaySearchResults(albums, query, searchType) {
         resultsContainer.innerHTML = '<p>No albums found.</p>';
         return;
     }
-
-    console.log(`Total results before filtering: ${albums.length}`);
-
     // Update filtering logic for the new response format
     const filteredAlbums = albums.filter(album => {
         if (searchType === 'artist') {            
