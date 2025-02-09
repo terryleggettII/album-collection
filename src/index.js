@@ -187,6 +187,24 @@ function fetchArtistName(releaseGroupId) {
         });
 }
 
+// Function to fetch and display the favorites list
+function fetchFavorites() {
+    fetch('http://localhost:3000/favoriteAlbums')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Favories:', data);
+        displayFavorites(data);
+    })
+    .catch(error => {
+        console.error('Error fetching favorites:', error);
+    })
+}
+
 // Function to display search results in the UI
 function displaySearchResults(albums, query, searchType) {
     const resultsContainer = document.getElementById('results');
