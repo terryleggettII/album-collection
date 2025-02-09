@@ -205,6 +205,37 @@ function fetchFavorites() {
     })
 }
 
+// Function to display the favorites list in the UI
+function displayFavorites(favorites) {
+    const favoritesContainer = document.getElementById('favorites');
+    favoritesContainer.innerHTML = ''; // Clear prevoius favorites
+
+    if (!favorites || favorites.length === 0) {
+        favoritesContainer.innerHTML = '<p>No favorite albums found.</p>';
+        return;
+    }
+
+    favoritesContainer.innerHTML = `<p>Found ${favorites.length} favorite albums:</p>`;
+
+    favorites.forEach(album => {
+        const albumDiv = document.createElement('dib');
+        albumDiv.className = 'album';
+
+        const title = album.title || album.name || 'Unknown Title';
+        const artistName = album.artistName || 'Unknown Artist';
+        const releaseDate = album['first-release-date'] || 'Unknown Release Date';
+        const coverArtURL = album.coverArtURL || '';
+
+        albumDiv.innerHTML = `
+            ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 200px; height: 200px;" />` : '<p>NO ALBUM ART FOUND</p>'}
+            <h3>${title}</h3>
+            <p><strong>Artist:</strong> ${artistName}</p>
+            <p><strong>Release Date:</strong> ${releaseDate}</p>
+        `;
+        favoritesContainer.appendChild(albumDiv);
+    })
+}
+
 // Function to display search results in the UI
 function displaySearchResults(albums, query, searchType) {
     const resultsContainer = document.getElementById('results');
