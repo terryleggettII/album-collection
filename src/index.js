@@ -252,16 +252,17 @@ function fetchFavorites() {
 // Function to display the favorites list in the UI
 function displayFavorites(favorites) {
     const favoritesContainer = document.getElementById('favorites');
-    displayAlbums(favorites, favoritesContainer, true);
+    favoritesContainer.innerHTML = ''; // Clear previous content
+    displayAlbums(favorites, favoritesContainer, true); // Use same album display logic
 }
 
 // Call fetchFavorites to display the favorites list when the page loads
 document.addEventListener('DOMContentLoaded', fetchFavorites);
 
 // Function to display albums in the UI
-function displayAlbums(albums, container, isFavoriteSection = false) {
+function displayAlbums(albums, container, isFavoriteSection = false, resultType = 'album') {
     if (!albums || albums.length === 0) {
-        container.innerHTML = '<p>No albums found.</p>';
+        container.innerHTML = `<p>No ${resultType === 'artist' ? 'artists' : 'albums'} found.</p>`;
         hideLoadingState(); // Hide loading state if no albums found
         return;
     }
@@ -310,7 +311,7 @@ function displayAlbums(albums, container, isFavoriteSection = false) {
 // Function to display search results in the UI
 function displaySearchResults(albums, query, searchType) {
     const resultsContainer = document.getElementById('results');
-    displayAlbums(albums, resultsContainer);
+    displayAlbums(albums, resultsContainer, false, searchType);
 }
 
 // Event listener for search form submission
@@ -326,16 +327,19 @@ document.getElementById('search-form').addEventListener('submit', function (even
 document.addEventListener("DOMContentLoaded", function () {
     const darkModeToggle = document.getElementById("dark-mode-toggle");
     const body = document.body;
+    const title = document.querySelector(".title");
 
     // Check saved preference in localStorage
     if (localStorage.getItem("darkMode") === "enabled") {
         body.classList.add("dark-mode");
+        title.classList.add("dark-mode");
         darkModeToggle.textContent = "☀️ Light Mode";
     }
 
     // Toggle dark mode on button click
     darkModeToggle.addEventListener("click", function () {
         body.classList.toggle("dark-mode");
+        title.classList.toggle("dark-mode");
 
         if (body.classList.contains("dark-mode")) {
             localStorage.setItem("darkMode", "enabled");
