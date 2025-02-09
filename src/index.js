@@ -64,9 +64,10 @@ function getCoverArtURL(releaseGroupId) {
         });
 }
 
+// Function to add an album to the favorites list
 function addAlbumToFavorites(album) {
-    fetch('http://localhost:3000/favoriteAlbums', {
-        method: postMessage,
+    fetch('http://localhost:3000/favorites', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -79,10 +80,37 @@ function addAlbumToFavorites(album) {
         return response.json();
     })
     .then(data => {
-        console.log('Album added to favorites:', data)
+        console.log('Album added to favorites:', data);
+        // Update the favorites list in the DOM
+        const favoritesContainer = document.getElementById('favorites');
+        displayAlbums([data], favoritesContainer, true);
     })
     .catch(error => {
-        console.error('Error adding album to favorites:', error)
+        console.error('Error adding album to favorites:', error);
+    });
+}
+
+// Function to remove an album from the favorites list
+function removeAlbumFromFavorites(albumId) {
+    fetch(`http://localhost:3000/favorites/${albumId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Album removed from favorites:', data);
+        // Remove the album from the favorites list in the DOM
+        const albumDiv = document.querySelector(`.album[data-id="${albumId}"]`);
+        if (albumDiv) {
+            albumDiv.remove();
+        }
+    })
+    .catch(error => {
+        console.error('Error removing album from favorites:', error);
     });
 }
 
@@ -110,7 +138,15 @@ function fetchAlbums(query, searchType, callback) {
                 if (!data || !data['release-groups']) {
                     throw new Error('Invalid API response structure');
                 }
-                callback(data['release-groups'], query, searchType);
+
+                // Filter out non-official album releases
+                const filteredAlbums = data['release-groups'].filter(album => {
+                    const primaryType = album['primary-type'] || '';
+                    const secondaryTypes = album['secondary-types'] || [];
+                    return primaryType.toLowerCase() === 'album' && secondaryTypes.length === 0;
+                });
+
+                callback(filteredAlbums, query, searchType);
                 isLoading = false;
                 hideLoadingState();
             })
@@ -135,8 +171,16 @@ function fetchAlbums(query, searchType, callback) {
                 if (!data || !data['release-groups']) {
                     throw new Error('Invalid API response structure');
                 }
-                
-                callback(data['release-groups'], query, searchType);
+
+                // Filter out non-official album releases and allow partial matches for album titles
+                const filteredAlbums = data['release-groups'].filter(album => {
+                    const primaryType = album['primary-type'] || '';
+                    const secondaryTypes = album['secondary-types'] || [];
+                    const title = album.title || album.name || '';
+                    return primaryType.toLowerCase() === 'album' && secondaryTypes.length === 0 && title.toLowerCase().includes(query.trim().toLowerCase());
+                });
+
+                callback(filteredAlbums, query, searchType);
                 isLoading = false;
                 hideLoadingState();
             })
@@ -152,12 +196,12 @@ function fetchAlbums(query, searchType, callback) {
 // Function to show a loading message during API calls
 function showLoadingState() {
     const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = '<div class="loading">Loading...</div>';
+    resultsContainer.innerHTML = '<div class="loading-spinner"></div>';
 }
 
 // Function to remove the loading message after API calls complete
 function hideLoadingState() {
-    const loadingDiv = document.querySelector('.loading');
+    const loadingDiv = document.querySelector('.loading-spinner');
     if (loadingDiv) loadingDiv.remove();
 }
 
@@ -189,117 +233,84 @@ function fetchArtistName(releaseGroupId) {
 
 // Function to fetch and display the favorites list
 function fetchFavorites() {
-    fetch('http://localhost:3000/favoriteAlbums')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Favories:', data);
-        displayFavorites(data);
-    })
-    .catch(error => {
-        console.error('Error fetching favorites:', error);
-    })
+    fetch('http://localhost:3000/favorites')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Favorites:', data);
+            displayFavorites(data);
+        })
+        .catch(error => {
+            console.error('Error fetching favorites:', error);
+        });
 }
 
 // Function to display the favorites list in the UI
 function displayFavorites(favorites) {
     const favoritesContainer = document.getElementById('favorites');
-    favoritesContainer.innerHTML = ''; // Clear prevoius favorites
-
-    if (!favorites || favorites.length === 0) {
-        favoritesContainer.innerHTML = '<p>No favorite albums found.</p>';
-        return;
-    }
-
-    favoritesContainer.innerHTML = `<p>Found ${favorites.length} favorite albums:</p>`;
-
-    favorites.forEach(album => {
-        const albumDiv = document.createElement('dib');
-        albumDiv.className = 'album';
-
-        const title = album.title || album.name || 'Unknown Title';
-        const artistName = album.artistName || 'Unknown Artist';
-        const releaseDate = album['first-release-date'] || 'Unknown Release Date';
-        const coverArtURL = album.coverArtURL || '';
-
-        albumDiv.innerHTML = `
-            ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 200px; height: 200px;" />` : '<p>NO ALBUM ART FOUND</p>'}
-            <h3>${title}</h3>
-            <p><strong>Artist:</strong> ${artistName}</p>
-            <p><strong>Release Date:</strong> ${releaseDate}</p>
-        `;
-        favoritesContainer.appendChild(albumDiv);
-    })
+    displayAlbums(favorites, favoritesContainer, true);
 }
 
 // Call fetchFavorites to display the favorites list when the page loads
 document.addEventListener('DOMContentLoaded', fetchFavorites);
 
+// Function to display albums in the UI
+function displayAlbums(albums, container, isFavoriteSection = false) {
+    if (!albums || albums.length === 0) {
+        container.innerHTML = '<p>No albums found.</p>';
+        hideLoadingState(); // Hide loading state if no albums found
+        return;
+    }
+
+    const albumPromises = albums.map(album => {
+        const albumDiv = document.createElement('div');
+        albumDiv.className = 'album';
+        albumDiv.setAttribute('data-id', album.id);
+
+        const title = album.title || album.name || 'Unknown Title';
+
+        return getArtistName(album).then(artistName => {
+            const releaseDate = album['first-release-date'] || 'Unknown Release Date';
+            return getCoverArtURL(album.id).then(coverArtURL => {
+                albumDiv.innerHTML = `
+                    ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 200px; height: 200px;" />` : '<p>NO ALBUM ART FOUND</p>'}
+                    <h3>${title}</h3>
+                    <p><strong>Artist:</strong> ${artistName}</p>
+                    <p><strong>Release Date:</strong> ${releaseDate}</p>
+                    <button class="${isFavoriteSection ? 'remove-from-favorites' : 'add-to-favorites'}">
+                        ${isFavoriteSection ? 'Remove from Favorites' : 'Add to Favorites'}
+                    </button>
+                `;
+                container.appendChild(albumDiv);
+
+                // Add event listener to the button
+                if (isFavoriteSection) {
+                    albumDiv.querySelector('.remove-from-favorites').addEventListener('click', () => {
+                        removeAlbumFromFavorites(album.id);
+                    });
+                } else {
+                    albumDiv.querySelector('.add-to-favorites').addEventListener('click', () => {
+                        addAlbumToFavorites(album);
+                    });
+                }
+            });
+        });
+    });
+
+    // Wait for all album promises to resolve before hiding the loading state
+    Promise.all(albumPromises).then(() => {
+        hideLoadingState();
+    });
+}
+
 // Function to display search results in the UI
 function displaySearchResults(albums, query, searchType) {
     const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = ''; // Clear previous results
-    
-    if (!albums || albums.length === 0) {
-        resultsContainer.innerHTML = '<p>No albums found.</p>';
-        return;
-    }
-    // Update filtering logic for the new response format
-    const filteredAlbums = albums.filter(album => {
-        if (searchType === 'artist') {            
-            // Only include albums (not singles, EPs, etc.)
-            const primaryType = album['primary-type'] || '';
-            const secondaryTypes = album['secondary-types'] || [];
-            return primaryType.toLowerCase() === 'album' && secondaryTypes.length === 0;
-        } else {
-            return album.title.trim().toLowerCase().includes(query.trim().toLowerCase());
-        }
-    });
-
-    // Sort by relevance score
-    filteredAlbums.sort((a, b) => (b.relevanceScore || 0) - (a.relevanceScore || 0));
-
-    console.log(`Filtered results: ${filteredAlbums.length}`);
-
-    if (filteredAlbums.length === 0) {
-        resultsContainer.innerHTML = '<p>No albums found.</p>';
-        return;
-    }
-
-    resultsContainer.innerHTML = `<p>Found ${filteredAlbums.length} results:</p>`;
-    
-    filteredAlbums.reduce((promise, album) => {
-        return promise.then(() => {
-            if (!album) return Promise.resolve();
-            
-            const albumDiv = document.createElement('div');
-            albumDiv.className = 'album';
-            
-            const title = album.title || album.name || 'Unknown Title';
-            
-            return getArtistName(album).then(artistName => {
-                const releaseDate = album['first-release-date'] || 'Unknown Release Date';
-                return getCoverArtURL(album.id).then(coverArtURL => {
-                    albumDiv.innerHTML = `
-                        ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 200px; height: 200px;" />` : '<p>NO ALBUM ART FOUND</p>'}
-                        <h3>${title}</h3>
-                        <p><strong>Artist:</strong> ${artistName}</p>
-                        <p><strong>Release Date:</strong> ${releaseDate}</p>
-                    `;
-                    resultsContainer.appendChild(albumDiv);
-
-                    // Add event listener to the "Add to Favorites" button
-                    albumDiv.querySelector('.add-to-favorites').addEventListener('click', () => {
-                        addAlbumToFavorites(album);
-                    })
-                });
-            });
-        });
-    }, Promise.resolve());
+    displayAlbums(albums, resultsContainer);
 }
 
 // Event listener for search form submission
@@ -335,9 +346,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-// Add a Loading Spinner
-function showLoadingState() {
-    const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = '<div class="loading-spinner"></div>';
-}
