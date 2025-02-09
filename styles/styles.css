@@ -12,6 +12,25 @@ body {
     background-color: #f4f4f4;
 }
 
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.dark-mode .album {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+}
+
+.dark-mode button {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+.dark-mode a {
+    color: #bb86fc;
+}
 /* Header styles */
 h1 {
     text-align: center;
