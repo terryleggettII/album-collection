@@ -3,17 +3,19 @@ let isLoading = false;
 let currentOffset = 0;
 const DELAY_BETWEEN_REQUESTS = 1000; // 1 second delay between requests
 
-// Add headers and delay utility
+// Headers for API requests to comply with MusicBrainz API requirements
 const headers = {
     'User-Agent': 'AlbumCollection/1.0.0 ( https://github.com/yourusername/album-collection )'
 };
 
+// Utility function to create a delay before making API requests
 const delay = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
+// Function to retry API requests in case of failures
 function fetchWithRetry(url, retries = 3) {
     let attempt = 0;
     function makeRequest() {
-        return delay(DELAY_BETWEEN_REQUESTS)
+        return delay(DELAY_BETWEEN_REQUESTS) // Introduce delay between requests
             .then(() => fetch(url, { headers }))
             .catch(error => {
                 if (attempt < retries - 1) {
@@ -27,20 +29,20 @@ function fetchWithRetry(url, retries = 3) {
     return makeRequest();
 }
 
-// First, get the artist MusicBrainz Identifier
+// Function to retrieve an artist's MusicBrainz Identifier (MBID)
 function getArtistMBID(artistName) {
     const url = `https://musicbrainz.org/ws/2/artist/?query=${encodeURIComponent(artistName)}&fmt=json&limit=1`;
     return fetchWithRetry(url)
         .then(response => response.json())
         .then(data => {
             if (data.artists && data.artists.length > 0) {
-                return data.artists[0].id;
+                return data.artists[0].id; // Return the first matching artist's MBID
             }
             return Promise.reject(new Error('Artist not found'));
         });
 }
 
-// Function to fetch cover art URL
+// Function to fetch cover art for a release group
 function getCoverArtURL(releaseGroupId) {
     const url = `https://coverartarchive.org/release-group/${releaseGroupId}`;
     return fetchWithRetry(url)
@@ -52,7 +54,7 @@ function getCoverArtURL(releaseGroupId) {
         })
         .then(data => {
             if (data.images && data.images.length > 0) {
-                return data.images[0].thumbnails.small || data.images[0].image;
+                return data.images[0].thumbnails.small || data.images[0].image; // Return cover art URL
             }
             return null; // Return null if no cover art is found
         })
@@ -62,13 +64,14 @@ function getCoverArtURL(releaseGroupId) {
         });
 }
 
+// Function to fetch albums based on user query and search type
 function fetchAlbums(query, searchType, callback) {
-    if (isLoading) return;
+    if (isLoading) return; // Prevent duplicate searches
     isLoading = true;
     showLoadingState();
 
     if (searchType === 'artist') {
-        // Get MusicBrainz Identifier first, then fetch releases
+        // Fetch artist MBID first, then fetch albums
         getArtistMBID(query.trim())
             .then(mbid => {
                 const url = `https://musicbrainz.org/ws/2/release-group/?artist=${mbid}&type=album&limit=100&offset=${currentOffset}&fmt=json`;
@@ -96,7 +99,7 @@ function fetchAlbums(query, searchType, callback) {
                 hideLoadingState();
             });
     } else {
-        // Handle album search as before
+        // Fetch albums directly if searching by album name
         const url = `https://musicbrainz.org/ws/2/release-group/?query=release:${encodeURIComponent(query.trim())}&type=album&fmt=json&limit=100`;
         fetchWithRetry(url)
             .then(response => {
@@ -124,11 +127,13 @@ function fetchAlbums(query, searchType, callback) {
     }
 }
 
+// Function to show a loading message during API calls
 function showLoadingState() {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '<div class="loading">Loading...</div>';
 }
 
+// Function to remove the loading message after API calls complete
 function hideLoadingState() {
     const loadingDiv = document.querySelector('.loading');
     if (loadingDiv) loadingDiv.remove();
@@ -160,7 +165,7 @@ function fetchArtistName(releaseGroupId) {
         });
 }
 
-// Function to display search results
+// Function to display search results in the UI
 function displaySearchResults(albums, query, searchType) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = ''; // Clear previous results
@@ -227,6 +232,7 @@ document.getElementById('search-form').addEventListener('submit', function (even
     fetchAlbums(query, searchType, displaySearchResults);
 });
 
+// Dark mode toggle functionality
 document.addEventListener("DOMContentLoaded", function () {
     const darkModeToggle = document.getElementById("dark-mode-toggle");
     const body = document.body;
