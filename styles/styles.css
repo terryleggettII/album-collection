@@ -103,6 +103,11 @@ button:hover {
     margin-bottom: 5px;
 }
 
+.album .release-date {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
 .loading {
     position: fixed;
     top: 50%;
