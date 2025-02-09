@@ -211,10 +211,10 @@ function displaySearchResults(albums, query, searchType) {
                 const releaseDate = album['first-release-date'] || 'Unknown Release Date';
                 return getCoverArtURL(album.id).then(coverArtURL => {
                     albumDiv.innerHTML = `
+                        ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 200px; height: 200px;" />` : '<p>NO ALBUM ART FOUND</p>'}
                         <h3>${title}</h3>
-                        <p>Artist: ${artistName}</p>
-                        <p>Release Date: ${releaseDate}</p>
-                        ${coverArtURL ? `<img src="${coverArtURL}" alt="${title} cover art" style="width: 300px; height: 300px;" />` : '<p>NO ALBUM ART FOUND</p>'}
+                        <p><strong>Artist:</strong> ${artistName}</p>
+                        <p><strong>Release Date:</strong> ${releaseDate}</p>
                     `;
                     resultsContainer.appendChild(albumDiv);
                 });
