@@ -10,6 +10,12 @@ body {
     line-height: 1.6;
     padding: 20px;
     background-color: #f4f4f4;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dark-mode {
+    background: #121212;
+    color: #ffffff;
 }
 
 body.dark-mode {
