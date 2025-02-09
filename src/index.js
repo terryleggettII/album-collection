@@ -239,6 +239,11 @@ function displaySearchResults(albums, query, searchType) {
                         <p><strong>Release Date:</strong> ${releaseDate}</p>
                     `;
                     resultsContainer.appendChild(albumDiv);
+
+                    // Add event listener to the "Add to Favorites" button
+                    albumDiv.querySelector('.add-to-favorites').addEventListener('click', () => {
+                        addAlbumToFavorites(album);
+                    })
                 });
             });
         });
