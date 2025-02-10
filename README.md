@@ -45,7 +45,7 @@ Welcome to my Album Collection project! This is a Single Page Application (SPA) 
 1. Open the application in your browser.
 2. Use the search bar to find albums by artist name or album title.
 3. Click on an album to view its details.
-4. Save albums to your personal collection or add them to your favorites list.
+4. Save albums to your favorites collection.
 
 ## Contributing
 Contributions are welcome! Please follow these steps:
