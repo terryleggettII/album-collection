@@ -1,4 +1,6 @@
-# Album Collection
+# Album Collection 🎵
+A sleek single-page app for finding and saving your favorite albums.
+
 
 ## Table of Contents
 1. [Getting Started](#getting-started)
@@ -6,8 +8,6 @@
 3. [Technologies Used](#technologies-used)
 4. [Installation](#installation)
 5. [Usage](#usage)
-6. [Contributing](#contributing)
-7. [License](#license)
 
 ## Getting Started
 Welcome to my Album Collection project! This is a Single Page Application (SPA) built with HTML, CSS, and JavaScript that allows users to search for albums, and save them to their Favorite Albums Collection. The project utilizes the MusicBrainz API to fetch data about albums and artists.
@@ -39,22 +39,15 @@ Welcome to my Album Collection project! This is a Single Page Application (SPA) 
     ```sh
     cd album-collection
     ```
-3. Open `index.html` in your browser to view the application.
+3. Open `index.html` directly in your browser, or open the project with a live server extension.
+
+4. (Optional) To start a local JSON server with `db.json`:
+    ```sh
+    json-server --watch db.json
+    ```
+
 
 ## Usage
 1. Open the application in your browser.
 2. Use the search bar to find albums by artist name or album title.
-3. Click on an album to view its details.
 4. Save albums to your favorites collection.
-
-## Contributing
-Contributions are welcome! Please follow these steps:
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Commit your changes (`git commit -m 'Add new feature'`).
-5. Push to the branch (`git push origin feature-branch`).
-6. Open a Pull Request.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
